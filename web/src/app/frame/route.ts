@@ -3,14 +3,7 @@ import { Alchemy, Network } from "alchemy-sdk"
 import dedent from "dedent"
 import { NextRequest, NextResponse } from "next/server"
 
-const baseURL = process.env.NEXT_PUBLIC_WEB_URL
-  ? new URL(process.env.NEXT_PUBLIC_WEB_URL)
-  : process.env.VERCEL_URL
-  ? new URL(`https://${process.env.VERCEL_URL}`)
-  : process.env.NEXT_PUBLIC_ENV === "development"
-  ? new URL(`http://localhost:${process.env.PORT || 3000}`)
-  : undefined
-
+const baseURL = "https://lfg-regens-and-degens.vercel.app"
 const postURL = `${baseURL}/frame`
 const imageURL = (modifier: string) => `${baseURL}/images/lfg-${modifier}.png`
 
