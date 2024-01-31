@@ -12,6 +12,7 @@ const baseURL = process.env.NEXT_PUBLIC_WEB_URL
 export const metadata: Metadata = {
   metadataBase: baseURL,
   title: "🌱 LFG 🌱",
+  description: "LFG is just a meme, for regens, and degens, alike.",
   robots: {
     index: true,
     follow: true,
@@ -21,9 +22,9 @@ export const metadata: Metadata = {
     creator: "@TheEdenDao",
     card: "summary_large_image",
     images: {
-      url: "/images/lfg-meme.png",
+      url: "/og.png",
       width: 231,
-      height: 242,
+      height: 142,
       alt: "LFG: It's just a meme",
     },
   },
@@ -31,9 +32,9 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/images/lfg-meme.png",
+        url: "/og.png",
         width: 231,
-        height: 242,
+        height: 142,
         alt: "LFG: It's just a meme",
       },
     ],
