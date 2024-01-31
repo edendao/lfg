@@ -1,4 +1,3 @@
-import { SyndicateClient } from "@syndicateio/syndicate-node"
 import { kv } from "@vercel/kv"
 import dedent from "dedent"
 import { NextRequest, NextResponse } from "next/server"
@@ -38,43 +37,55 @@ export async function GET() {
   )
 }
 
-const NEYNAR_API_KEY = process.env.NEYNAR_API_KEY
-if (!NEYNAR_API_KEY) throw new Error("Missing NEYNAR_API_KEY.")
+const SYNDICATE_API_KEY = process.env.SYNDICATE_API_KEY
+const SYNDICATE_PROJECT_ID = process.env.SYNDICATE_PROJECT_ID
+if (!SYNDICATE_API_KEY) throw new Error("Missing SYNDICATE_API_KEY.")
+if (!SYNDICATE_PROJECT_ID) throw new Error("Missing SYNDICATE_PROJECT_ID.")
 
-const accountForUser = async ({ fid }: { fid: number }) => {
-  const req = await fetch(
-    `https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`,
-    { headers: { accept: "application/json", api_key: NEYNAR_API_KEY } },
-  )
-  const res = await req.json()
-  const address = res?.users?.[0]?.verifications?.[0]
-  if (!address) throw new Error("No address found for FID.")
-
-  return address
+type FrameData = {
+  untrustedData: {
+    fid: number
+    url: string
+    messageHash: string
+    timestamp: number
+    network: number
+    buttonIndex: number
+    castId: {
+      fid: number
+      hash: string
+    }
+  }
+  trustedData: {
+    messageBytes: string
+  }
 }
 
-const SYNDICATE_PROJECT_ID = ""
-const SYNDICATE_API_KEY = process.env.SYNDICATE_API_KEY
-if (!SYNDICATE_API_KEY) throw new Error("Missing SYNDICATE_API_KEY.")
-
-const syndicate = new SyndicateClient({ token: SYNDICATE_API_KEY })
-
-const claim = async (account: string) => {
-  const tx = await kv.get<string>(`${account}-claim-txid`)
-  if (tx) {
-    return tx
+const claimTxn = async (body: FrameData): Promise<string> => {
+  const fid = body.untrustedData.fid
+  if (!fid) {
+    throw new Error("Missing fid.")
   }
 
-  const { transactionId } = await syndicate.transact.sendTransaction({
-    projectId: "TODO",
-    contractAddress: "TODO",
-    chainId: 8453,
-    functionSignature: "claim(address account)",
-    args: { account },
-  })
+  let txid = await kv.get<string>(`${fid}-claim-txid`)
+  if (txid) {
+    return txid
+  }
 
-  await kv.set(`${account}-claim-txid`, transactionId)
-  return transactionId
+  const frameTrustedData = body.trustedData.messageBytes
+  const req = await fetch("https://frame.syndicate.io/api/mint", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      accept: "application/json",
+      authorization: `Bearer ${SYNDICATE_API_KEY}`,
+    },
+    body: JSON.stringify({ frameTrustedData }),
+  })
+  const res = await req.json()
+
+  txid = res.transactionId as string
+  await kv.set(`${fid}-claim-txid`, txid, { ex: 21 * 24 * 60 * 60 }) // 21 days
+  return txid
 }
 
 type ClaimStatus =
@@ -105,10 +116,9 @@ const getStatus = async (txID: string): Promise<ClaimStatus> => {
 }
 
 export async function POST(req: NextRequest) {
-  const { untrustedData } = await req.json()
-  const account = await accountForUser(untrustedData)
-
-  const status: ClaimStatus = await claim(account)
+  const status: ClaimStatus = await req
+    .json()
+    .then(claimTxn)
     .then(getStatus)
     .catch(() => "ERROR")
 
