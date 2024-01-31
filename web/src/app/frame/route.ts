@@ -1,4 +1,5 @@
 import { kv } from "@vercel/kv"
+import { Alchemy, Network } from "alchemy-sdk"
 import dedent from "dedent"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -88,31 +89,16 @@ const claimTxn = async (body: FrameData): Promise<string> => {
   return txid
 }
 
-type ClaimStatus =
-  | "PENDING"
-  | "PROCESSED"
-  | "SUBMITTED"
-  | "CONFIRMED"
-  | "FINISHED"
-  | "ERROR"
+const alchemy = new Alchemy({
+  apiKey: process.env.ALCHEMY_API_KEY,
+  network: Network.BASE_MAINNET,
+})
+
+type ClaimStatus = "PENDING" | "CONFIRMED" | "ERROR"
 
 const getStatus = async (txID: string): Promise<ClaimStatus> => {
-  const req = await fetch(
-    `https://api.syndicate.io/wallet/project/${SYNDICATE_PROJECT_ID}/request/${txID}`,
-    {
-      headers: {
-        accept: "application/json",
-        authorization: `Bearer ${SYNDICATE_API_KEY}`,
-      },
-    },
-  )
-  const res = await req.json()
-
-  const attempt = res.transactionAttempts[0]
-  if (!attempt) return "PENDING"
-  if (attempt.reverted) return "FINISHED"
-
-  return attempt.status
+  const tx = await alchemy.core.getTransactionReceipt(txID)
+  return !tx ? "PENDING" : tx.status === 1 ? "CONFIRMED" : "ERROR"
 }
 
 export async function POST(req: NextRequest) {
@@ -131,7 +117,7 @@ export async function POST(req: NextRequest) {
         <meta property="og:image" content="${APP_URL}/lfg-${status}.png" />
         <meta property="fc:frame:image" content="${APP_URL}/lfg-${status}.png" />
         ${
-          status !== "FINISHED" &&
+          status === "PENDING" &&
           `<meta property="fc:frame:button:1" content="🫡 Refresh Status 🫡" />
            <meta property="fc:frame:post_url" content="${APP_URL}/frame" />`
         }
