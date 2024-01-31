@@ -15,6 +15,8 @@ const BASE_FRAME_META = `
 <meta property="fc:frame" content="vNext" />
 `
 
+const imageURL = (modifier: string) => `${APP_URL}/image/lfg-${modifier}.png`
+
 export async function GET() {
   return new NextResponse(
     dedent`
@@ -22,8 +24,8 @@ export async function GET() {
     <html>
       <head>
         ${BASE_FRAME_META}
-        <meta property="og:image" content="${APP_URL}/lfg-MEME.png" />
-        <meta property="fc:frame:image" content="${APP_URL}/lfg-MEME.png" />
+        <meta property="og:image" content="${imageURL("meme")}" />
+        <meta property="fc:frame:image" content="${imageURL("meme")}" />
         <meta property="fc:frame:button:1" content="🌱 LFG 🌱" />
         <meta property="fc:frame:post_url" content="${APP_URL}/frame" />
       </head>
@@ -92,7 +94,7 @@ const alchemy = new Alchemy({
   network: Network.BASE_MAINNET,
 })
 
-type ClaimStatus = "PENDING" | "CONFIRMED" | "ERROR"
+type ClaimStatus = "pending" | "confirmed" | "error"
 
 const getStatus = async (txID: string): Promise<ClaimStatus> => {
   let status = await kv.get<ClaimStatus>(`${txID}-status`)
@@ -101,7 +103,7 @@ const getStatus = async (txID: string): Promise<ClaimStatus> => {
   }
 
   const tx = await alchemy.core.getTransactionReceipt(txID)
-  status = !tx ? "PENDING" : tx.status === 1 ? "CONFIRMED" : "ERROR"
+  status = !tx ? "pending" : tx.status === 1 ? "confirmed" : "error"
 
   await kv.set(`${txID}-status`, status, { ex: 2 })
   return status
@@ -112,7 +114,7 @@ export async function POST(req: NextRequest) {
     .json()
     .then(claimTxn)
     .then(getStatus)
-    .catch(() => "ERROR")
+    .catch(() => "error")
 
   return new NextResponse(
     dedent`
@@ -120,10 +122,10 @@ export async function POST(req: NextRequest) {
     <html>
       <head>
         ${BASE_FRAME_META}
-        <meta property="og:image" content="${APP_URL}/lfg-${status}.png" />
-        <meta property="fc:frame:image" content="${APP_URL}/lfg-${status}.png" />
+        <meta property="og:image" content="${imageURL(status)}" />
+        <meta property="fc:frame:image" content="${imageURL(status)}" />
         ${
-          status === "PENDING" &&
+          status === "pending" &&
           `<meta property="fc:frame:button:1" content="🫡 Refresh Status 🫡" />
            <meta property="fc:frame:post_url" content="${APP_URL}/frame" />`
         }
