@@ -24,7 +24,7 @@ export async function GET() {
         ${BASE_FRAME_META}
         <meta property="og:image" content="${APP_URL}/lfg-MEME.png" />
         <meta property="fc:frame:image" content="${APP_URL}/lfg-MEME.png" />
-        <meta property="fc:frame:button:1" content="😤 LFG 😤" />
+        <meta property="fc:frame:button:1" content="🌱 LFG 🌱" />
         <meta property="fc:frame:post_url" content="${APP_URL}/frame" />
       </head>
     </html>
@@ -97,8 +97,16 @@ const alchemy = new Alchemy({
 type ClaimStatus = "PENDING" | "CONFIRMED" | "ERROR"
 
 const getStatus = async (txID: string): Promise<ClaimStatus> => {
+  let status = await kv.get<ClaimStatus>(`${txID}-status`)
+  if (status) {
+    return status
+  }
+
   const tx = await alchemy.core.getTransactionReceipt(txID)
-  return !tx ? "PENDING" : tx.status === 1 ? "CONFIRMED" : "ERROR"
+  status = !tx ? "PENDING" : tx.status === 1 ? "CONFIRMED" : "ERROR"
+
+  await kv.set(`${txID}-status`, status, { ex: 2 })
+  return status
 }
 
 export async function POST(req: NextRequest) {
