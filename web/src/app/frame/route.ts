@@ -39,9 +39,7 @@ export async function GET() {
 }
 
 const SYNDICATE_API_KEY = process.env.SYNDICATE_API_KEY
-const SYNDICATE_PROJECT_ID = process.env.SYNDICATE_PROJECT_ID
 if (!SYNDICATE_API_KEY) throw new Error("Missing SYNDICATE_API_KEY.")
-if (!SYNDICATE_PROJECT_ID) throw new Error("Missing SYNDICATE_PROJECT_ID.")
 
 type FrameData = {
   untrustedData: {
