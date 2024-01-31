@@ -11,8 +11,9 @@ const baseURL = process.env.NEXT_PUBLIC_WEB_URL
 
 export const metadata: Metadata = {
   metadataBase: baseURL,
-  title: "🌱 LFG 🌱",
-  description: "LFG is just a meme, for regens, and degens, alike.",
+  title: "🌱 LFG 🌱 | Degens 🤝 Regens",
+  description:
+    "LFG is a uniting force between tribes. It's just a meme. For degens, it's let's fucking go! For regens, it's let's fucking grow!",
   robots: {
     index: true,
     follow: true,
