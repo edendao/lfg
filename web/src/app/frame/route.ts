@@ -3,7 +3,7 @@ import { Alchemy, Network } from "alchemy-sdk"
 import dedent from "dedent"
 import { NextRequest, NextResponse } from "next/server"
 
-const DEPLOYMENT_URL = process.env.VERCEL_URL
+const DEPLOYMENT_URL = process.env.NEXT_PUBLIC_URL
 const APP_URL = DEPLOYMENT_URL
   ? `https://${DEPLOYMENT_URL}`
   : "http://localhost:3000"
