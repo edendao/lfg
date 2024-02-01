@@ -57,12 +57,27 @@ export default function HomePage() {
       }}
     >
       <h1 style={{ fontSize: 64, lineHeight: 1.1 }}>🌱 LFG 🌱</h1>
+      <div
+        style={{
+          fontSize: 24,
+          textAlign: "center",
+          background: "rgba(0, 0, 0, 0.5)",
+          paddingLeft: 24,
+          paddingRight: 24,
+          borderRadius: 12,
+        }}
+      >
+        <p>1 community</p>
+        <p>8888 free mints</p>
+        <p>69420 tokens</p>
+        <p>Endless possibilities</p>
+      </div>
       <Image
         src="/images/lfg-meme.png"
         width={256}
         height={165}
         alt="LFG: It's just a meme"
-        style={{ marginBottom: 12 }}
+        style={{ marginBottom: 12, marginTop: 24 }}
       />
       <Image
         src="/images/lfg-confirmed.jpg"
