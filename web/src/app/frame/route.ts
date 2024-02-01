@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server"
 
 const baseURL = "https://lfg-regens-and-degens.vercel.app"
 const postURL = `${baseURL}/frame`
-const imageURL = (modifier: string) => `${baseURL}/images/lfg-${modifier}.png`
+const imageURL = (modifier: string, ext = "jpg") => `${baseURL}/images/lfg-${modifier}.${ext}`
 
 const BASE_FRAME_META = `
 <meta charset="utf-8" />
@@ -21,8 +21,8 @@ export async function GET() {
     <html>
       <head>
         ${BASE_FRAME_META}
-        <meta property="og:image" content="${imageURL("meme")}" />
-        <meta property="fc:frame:image" content="${imageURL("meme")}" />
+        <meta property="og:image" content="${imageURL("meme", "png")}" />
+        <meta property="fc:frame:image" content="${imageURL("meme", "png")}" />
         <meta property="fc:frame:button:1" content="🌱 LFG 🌱" />
         <meta property="fc:frame:post_url" content="${postURL}" />
       </head>

@@ -13,7 +13,7 @@ export const metadata: Metadata = {
   metadataBase: baseURL,
   title: "🌱 LFG 🌱 | Degens 🤝 Regens",
   description:
-    "LFG is a uniting force between tribes. It's just a meme. For degens, it's let's fucking go! For regens, it's let's fucking grow!",
+    "LFG is a uniting force between tribes. For Farcaster, for degens, and for regens. Let's fucking go! Let's fucking grow! Let Farcaster grow!",
   robots: {
     index: true,
     follow: true,
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     creator: "@TheEdenDao",
     card: "summary_large_image",
     images: {
-      url: "/og.png",
+      url: "/images/lfg-meme.png",
       width: 231,
       height: 142,
       alt: "LFG: It's just a meme",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/og.png",
+        url: "/images/lfg-meme.png",
         width: 231,
         height: 142,
         alt: "LFG: It's just a meme",
@@ -58,14 +58,14 @@ export default function HomePage() {
     >
       <h1 style={{ fontSize: 64, lineHeight: 1.1 }}>🌱 LFG 🌱</h1>
       <Image
-        src="/images/lfg-meme.png"
+        src="/images/lfg-meme.jpg"
         width={256}
         height={165}
         alt="LFG: It's just a meme"
         style={{ marginBottom: 12 }}
       />
       <Image
-        src="/images/lfg-confirmed.png"
+        src="/images/lfg-confirmed.jpg"
         width={256}
         height={165}
         alt="Confirmed"
