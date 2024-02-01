@@ -58,7 +58,7 @@ export default function HomePage() {
     >
       <h1 style={{ fontSize: 64, lineHeight: 1.1 }}>🌱 LFG 🌱</h1>
       <Image
-        src="/images/lfg-meme.jpg"
+        src="/images/lfg-meme.png"
         width={256}
         height={165}
         alt="LFG: It's just a meme"
