@@ -81,6 +81,7 @@ const claimTxn = async (body: FrameData): Promise<string> => {
     body: JSON.stringify({ frameTrustedData }),
   })
   const res = await req.json()
+  console.log(res)
 
   txid = res.transactionId as string
   await kv.set(`${fid}-claim-txid`, txid, { ex: 21 * 24 * 60 * 60 }) // 21 days
