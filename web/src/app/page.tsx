@@ -76,7 +76,7 @@ export default function HomePage() {
         <p>Endless possibilities</p>
         <p>
           <a href="https://basescan.org/address/0x3cb90dfd6225917d4898de73d6a7e4451b4f9d76">
-            contract here for transparency, it&s happening
+            contract here for transparency, it&rsquo;s happening
           </a>
         </p>
       </div>
