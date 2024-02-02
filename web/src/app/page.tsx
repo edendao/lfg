@@ -67,10 +67,18 @@ export default function HomePage() {
           borderRadius: 12,
         }}
       >
-        <p>1 community</p>
-        <p>8888 free mints</p>
+        <p>1 vibe</p>
         <p>69420 tokens</p>
+        <p>Then 69417</p>
+        <p>Then 69414</p>
+        <p>...</p>
+        <p>For the first 8888</p>
         <p>Endless possibilities</p>
+        <p>
+          <a href="https://basescan.org/address/0x3cb90dfd6225917d4898de73d6a7e4451b4f9d76">
+            contract here for transparency, it&s happening
+          </a>
+        </p>
       </div>
       <Image
         src="/images/lfg-meme.png"
