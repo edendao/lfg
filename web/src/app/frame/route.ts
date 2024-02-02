@@ -2,7 +2,6 @@ import dedent from "dedent"
 import { NextRequest, NextResponse } from "next/server"
 
 const baseURL = "https://lfg-regens-and-degens.vercel.app"
-const postURL = `${baseURL}/frame`
 const imageURL = (modifier: string, ext = "jpg") =>
   `${baseURL}/images/lfg-${modifier}.${ext}`
 
@@ -13,8 +12,8 @@ const BASE_FRAME_META = `
 <meta property="fc:frame" content="vNext" />
 `
 
-export async function GET() {
-  return new NextResponse(
+export const GET = async () =>
+  new NextResponse(
     dedent`
     <!DOCTYPE html>
     <html>
@@ -25,7 +24,8 @@ export async function GET() {
           "pending",
           "jpg",
         )}" />
-        <meta property="fc:frame:button:1" content="🌱 8888 newborn regens 🌱" />
+        <meta property="fc:frame:button:1" content="🌱 8888 regens born, get LFG here 🌱" />
+        <meta property="fc:frame:button:$idx:action" content="post_redirect" />
       </head>
     </html>
   `,
@@ -36,10 +36,6 @@ export async function GET() {
       },
     },
   )
-}
-
-const SYNDICATE_API_KEY = process.env.SYNDICATE_API_KEY
-if (!SYNDICATE_API_KEY) throw new Error("Missing SYNDICATE_API_KEY.")
 
 type FrameData = {
   untrustedData: {
@@ -59,44 +55,7 @@ type FrameData = {
   }
 }
 
-const claimTxn = async (body: FrameData): Promise<string | null> => {
-  const fid = body.untrustedData.fid
-  if (!fid) {
-    throw new Error("Missing fid.")
-  }
-
-  const frameTrustedData = body.trustedData.messageBytes
-  const req = await fetch("https://frame.syndicate.io/api/mint", {
-    method: "POST",
-    headers: {
-      "content-type": "application/json",
-      accept: "application/json",
-      authorization: `Bearer ${SYNDICATE_API_KEY}`,
-    },
-    body: JSON.stringify({ frameTrustedData }),
-  })
-  const response = await req.json()
-
-  console.info({ ...response, ...body.untrustedData })
-  if (!response.success) {
-    throw new Error(response.error || "idk what happened")
-  }
-
-  return "confirmed"
-}
-
-export async function POST(req: NextRequest) {
-  return new NextResponse(
-    dedent`
-    <!DOCTYPE html>
-    <html>
-      <head>
-        ${BASE_FRAME_META}
-        <meta property="og:image" content="${imageURL("error")}" />
-        <meta property="fc:frame:image" content="${imageURL("error")}" />
-      </head>
-    </html>
-    `,
-    { status: 200, headers: { "content-type": "text/html; charset=utf-8" } },
+export const POST = async () =>
+  NextResponse.redirect(
+    "https://app.uniswap.org/swap?outputCurrency=0x3cB90DfD6225917d4898dE73D6a7E4451B4f9D76&chain=base",
   )
-}
