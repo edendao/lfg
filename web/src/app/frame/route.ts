@@ -20,10 +20,12 @@ export async function GET() {
     <html>
       <head>
         ${BASE_FRAME_META}
-        <meta property="og:image" content="${imageURL("meme", "png")}" />
-        <meta property="fc:frame:image" content="${imageURL("meme", "png")}" />
-        <meta property="fc:frame:button:1" content="🌱 LFG 🌱" />
-        <meta property="fc:frame:post_url" content="${postURL}" />
+        <meta property="og:image" content="${imageURL("pending", "jpg")}" />
+        <meta property="fc:frame:image" content="${imageURL(
+          "pending",
+          "jpg",
+        )}" />
+        <meta property="fc:frame:button:1" content="🌱 8888 newborn regens 🌱" />
       </head>
     </html>
   `,
@@ -84,33 +86,14 @@ const claimTxn = async (body: FrameData): Promise<string | null> => {
 }
 
 export async function POST(req: NextRequest) {
-  const errorText = await req
-    .json()
-    .then(claimTxn)
-    .then(() => "")
-    .catch((error) => {
-      console.error(error)
-      return error.message
-    })
-
-  const imageVariant = errorText ? "error" : "confirmed"
-
   return new NextResponse(
     dedent`
     <!DOCTYPE html>
     <html>
       <head>
         ${BASE_FRAME_META}
-        <meta property="og:image" content="${imageURL(imageVariant)}" />
-        <meta property="fc:frame:image" content="${imageURL(imageVariant)}" />
-        ${
-          errorText
-            ? dedent`
-              <meta property="fc:frame:button:1" content="🌱 ${errorText} 🌱" />
-              <meta property="fc:frame:post_url" content="${postURL}" />
-              `
-            : ""
-        }
+        <meta property="og:image" content="${imageURL("error")}" />
+        <meta property="fc:frame:image" content="${imageURL("error")}" />
       </head>
     </html>
     `,
