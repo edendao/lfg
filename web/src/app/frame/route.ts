@@ -1,4 +1,3 @@
-import { kv } from "@vercel/kv"
 import dedent from "dedent"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -64,11 +63,6 @@ const claimTxn = async (body: FrameData): Promise<boolean> => {
     throw new Error("Missing fid.")
   }
 
-  let success = await kv.get<boolean>(`${fid}-claim-txid`)
-  if (success) {
-    return success
-  }
-
   const frameTrustedData = body.trustedData.messageBytes
   const req = await fetch("https://frame.syndicate.io/api/mint", {
     method: "POST",
@@ -79,10 +73,9 @@ const claimTxn = async (body: FrameData): Promise<boolean> => {
     },
     body: JSON.stringify({ frameTrustedData }),
   })
-  success = (await req.json()).success as boolean
+  const { success } = await req.json()
 
-  await kv.set(`${fid}-claim`, success, { ex: 21 * 24 * 60 * 60 }) // 21 days
-  return success
+  return success as boolean
 }
 
 export async function POST(req: NextRequest) {
