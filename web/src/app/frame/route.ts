@@ -97,6 +97,8 @@ export async function POST(req: NextRequest) {
         ${BASE_FRAME_META}
         <meta property="og:image" content="${imageURL(status)}" />
         <meta property="fc:frame:image" content="${imageURL(status)}" />
+        <meta property="fc:frame:button:1" content="🌱 Retry 🌱" />
+        <meta property="fc:frame:post_url" content="${postURL}" />
       </head>
     </html>
     `,
