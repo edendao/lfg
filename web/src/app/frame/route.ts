@@ -57,7 +57,7 @@ type FrameData = {
   }
 }
 
-const claimTxn = async (body: FrameData): Promise<boolean> => {
+const claimTxn = async (body: FrameData): Promise<string | null> => {
   const fid = body.untrustedData.fid
   if (!fid) {
     throw new Error("Missing fid.")
@@ -76,19 +76,24 @@ const claimTxn = async (body: FrameData): Promise<boolean> => {
   const response = await req.json()
 
   console.info({ ...response, ...body.untrustedData })
-  return response.success as boolean
+  if (!response.success) {
+    throw new Error(response.error || "idk what happened")
+  }
+
+  return "confirmed"
 }
 
 export async function POST(req: NextRequest) {
-  const success = await req
+  const errorText = await req
     .json()
     .then(claimTxn)
+    .then(() => "")
     .catch((error) => {
       console.error(error)
-      return false
+      return error.message
     })
 
-  const status = success ? "confirmed" : "error"
+  const imageVariant = errorText ? "error" : "confirmed"
 
   return new NextResponse(
     dedent`
@@ -96,12 +101,12 @@ export async function POST(req: NextRequest) {
     <html>
       <head>
         ${BASE_FRAME_META}
-        <meta property="og:image" content="${imageURL(status)}" />
-        <meta property="fc:frame:image" content="${imageURL(status)}" />
+        <meta property="og:image" content="${imageURL(imageVariant)}" />
+        <meta property="fc:frame:image" content="${imageURL(imageVariant)}" />
         ${
-          status === "error"
+          errorText
             ? dedent`
-              <meta property="fc:frame:button:1" content="🌱 Retry 🌱" />
+              <meta property="fc:frame:button:1" content="🌱 ${errorText} 🌱" />
               <meta property="fc:frame:post_url" content="${postURL}" />
               `
             : ""
