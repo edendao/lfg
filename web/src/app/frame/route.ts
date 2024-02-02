@@ -63,6 +63,8 @@ const claimTxn = async (body: FrameData): Promise<boolean> => {
     throw new Error("Missing fid.")
   }
 
+  console.log(body.untrustedData)
+
   const frameTrustedData = body.trustedData.messageBytes
   const req = await fetch("https://frame.syndicate.io/api/mint", {
     method: "POST",
