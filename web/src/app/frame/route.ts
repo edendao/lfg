@@ -56,6 +56,10 @@ type FrameData = {
 }
 
 export const POST = async () =>
-  NextResponse.redirect(
-    "https://app.uniswap.org/swap?outputCurrency=0x3cB90DfD6225917d4898dE73D6a7E4451B4f9D76&chain=base",
-  )
+  new NextResponse("", {
+    status: 302,
+    headers: {
+      location:
+        "https://app.uniswap.org/swap?outputCurrency=0x3cB90DfD6225917d4898dE73D6a7E4451B4f9D76&chain=base",
+    },
+  })
