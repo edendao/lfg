@@ -1,5 +1,4 @@
 import { kv } from "@vercel/kv"
-import { Alchemy, Network } from "alchemy-sdk"
 import dedent from "dedent"
 import { NextRequest, NextResponse } from "next/server"
 
@@ -59,15 +58,15 @@ type FrameData = {
   }
 }
 
-const claimTxn = async (body: FrameData): Promise<string> => {
+const claimTxn = async (body: FrameData): Promise<boolean> => {
   const fid = body.untrustedData.fid
   if (!fid) {
     throw new Error("Missing fid.")
   }
 
-  let txid = await kv.get<string>(`${fid}-claim-txid`)
-  if (txid) {
-    return txid
+  let success = await kv.get<boolean>(`${fid}-claim-txid`)
+  if (success) {
+    return success
   }
 
   const frameTrustedData = body.trustedData.messageBytes
@@ -80,43 +79,22 @@ const claimTxn = async (body: FrameData): Promise<string> => {
     },
     body: JSON.stringify({ frameTrustedData }),
   })
-  const res = await req.json()
-  console.log(res)
+  success = (await req.json()).success as boolean
 
-  txid = res.transactionId as string
-  await kv.set(`${fid}-claim-txid`, txid, { ex: 21 * 24 * 60 * 60 }) // 21 days
-  return txid
-}
-
-const alchemy = new Alchemy({
-  apiKey: process.env.ALCHEMY_API_KEY,
-  network: Network.BASE_MAINNET,
-})
-
-type ClaimStatus = "pending" | "confirmed" | "error"
-
-const getStatus = async (txID: string): Promise<ClaimStatus> => {
-  let status = await kv.get<ClaimStatus>(`${txID}-status`)
-  if (status) {
-    return status
-  }
-
-  const tx = await alchemy.core.getTransactionReceipt(txID)
-  status = !tx ? "pending" : tx.status === 1 ? "confirmed" : "error"
-
-  await kv.set(`${txID}-status`, status, { ex: 2 })
-  return status
+  await kv.set(`${fid}-claim`, success, { ex: 21 * 24 * 60 * 60 }) // 21 days
+  return success
 }
 
 export async function POST(req: NextRequest) {
-  const status: ClaimStatus = await req
+  const success = await req
     .json()
     .then(claimTxn)
-    .then(getStatus)
     .catch((error) => {
       console.error(error)
-      return "error"
+      return false
     })
+
+  const status = success ? "confirmed" : "error"
 
   return new NextResponse(
     dedent`
@@ -126,11 +104,6 @@ export async function POST(req: NextRequest) {
         ${BASE_FRAME_META}
         <meta property="og:image" content="${imageURL(status)}" />
         <meta property="fc:frame:image" content="${imageURL(status)}" />
-        ${
-          status === "pending" &&
-          `<meta property="fc:frame:button:1" content="🫡 Refresh Status 🫡" />
-           <meta property="fc:frame:post_url" content="${postURL}" />`
-        }
       </head>
     </html>
     `,
