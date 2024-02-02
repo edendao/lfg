@@ -5,7 +5,8 @@ import { NextRequest, NextResponse } from "next/server"
 
 const baseURL = "https://lfg-regens-and-degens.vercel.app"
 const postURL = `${baseURL}/frame`
-const imageURL = (modifier: string, ext = "jpg") => `${baseURL}/images/lfg-${modifier}.${ext}`
+const imageURL = (modifier: string, ext = "jpg") =>
+  `${baseURL}/images/lfg-${modifier}.${ext}`
 
 const BASE_FRAME_META = `
 <meta charset="utf-8" />
@@ -111,7 +112,10 @@ export async function POST(req: NextRequest) {
     .json()
     .then(claimTxn)
     .then(getStatus)
-    .catch(() => "error")
+    .catch((error) => {
+      console.error(error)
+      return "error"
+    })
 
   return new NextResponse(
     dedent`
