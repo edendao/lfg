@@ -75,8 +75,19 @@ export default function HomePage() {
         <p>For the first 8888</p>
         <p>Endless possibilities</p>
         <p>
-          <a href="https://basescan.org/address/0x3cb90dfd6225917d4898de73d6a7e4451b4f9d76">
-            contract here for transparency, it&rsquo;s happening
+          <a
+            href="https://app.uniswap.org/swap?outputCurrency=0x3cB90DfD6225917d4898dE73D6a7E4451B4f9D76&chain=base"
+            target="_blank"
+          >
+            Get LFG here
+          </a>
+        </p>
+        <p>
+          <a
+            href="https://basescan.org/address/0x3cb90dfd6225917d4898de73d6a7e4451b4f9d76"
+            target="_blank"
+          >
+            smart contract here for transparency, it&rsquo;s happening
           </a>
         </p>
       </div>
