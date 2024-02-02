@@ -73,10 +73,10 @@ const claimTxn = async (body: FrameData): Promise<boolean> => {
     },
     body: JSON.stringify({ frameTrustedData }),
   })
-  const { success } = await req.json()
+  const response = await req.json()
 
-  console.info({ success, ...body.untrustedData })
-  return success as boolean
+  console.info({ ...response, ...body.untrustedData })
+  return response.success as boolean
 }
 
 export async function POST(req: NextRequest) {
