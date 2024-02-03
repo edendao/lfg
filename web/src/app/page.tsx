@@ -56,47 +56,45 @@ export default function HomePage() {
         background: "linear-gradient(to right, #a8ff78, #78ffd6)",
       }}
     >
-      <h1 style={{ fontSize: 64, lineHeight: 1.1 }}>🌱 LFG 🌱</h1>
-      <div
-        style={{
-          fontSize: 24,
-          textAlign: "center",
-          background: "rgba(0, 0, 0, 0.5)",
-          paddingLeft: 24,
-          paddingRight: 24,
-          borderRadius: 12,
-        }}
-      >
-        <p>1 vibe</p>
-        <p>69420 tokens</p>
-        <p>Then 69417</p>
-        <p>Then 69414</p>
-        <p>...</p>
-        <p>For the first 8888</p>
-        <p>Endless possibilities</p>
-        <p>
-          <a
-            href="https://app.uniswap.org/swap?outputCurrency=0x3cB90DfD6225917d4898dE73D6a7E4451B4f9D76&chain=base"
-            target="_blank"
-          >
-            Get LFG here
-          </a>
-        </p>
-        <p>
-          <a
-            href="https://basescan.org/address/0x3cb90dfd6225917d4898de73d6a7e4451b4f9d76"
-            target="_blank"
-          >
-            smart contract here for transparency, it&rsquo;s happening
-          </a>
-        </p>
-      </div>
       <Image
         src="/images/lfg-meme.png"
         width={256}
         height={165}
         alt="LFG: It's just a meme"
-        style={{ marginBottom: 12, marginTop: 24 }}
+      />
+      <div
+        style={{
+          fontSize: 24,
+          textAlign: "center",
+          background: "rgba(0, 0, 0, 0.25)",
+          marginTop: 24,
+          marginBottom: 24,
+          paddingLeft: 24,
+          paddingRight: 24,
+          borderRadius: 12,
+        }}
+      >
+        <h1 style={{ fontSize: 64, lineHeight: 1.1 }}>🌱 LFG 🌱</h1>
+        <p>A Farcaster squad built on kindness</p>
+        <p>Free mint sold out in 4 hours</p>
+        <p>
+          <a href="https://warpcast.com/cyrusofeden">Follow along here</a>
+        </p>
+        <p>
+          <a
+            href="https://app.uniswap.org/swap?outputCurrency=0x3cB90DfD6225917d4898dE73D6a7E4451B4f9D76&chain=base"
+            target="_blank"
+          >
+            Get LFG here and LP
+          </a>
+        </p>
+      </div>
+      <Image
+        src="/images/lfg-pending.jpg"
+        width={256}
+        height={165}
+        alt="Confirmed"
+        style={{ marginBottom: 12 }}
       />
       <Image
         src="/images/lfg-confirmed.jpg"
